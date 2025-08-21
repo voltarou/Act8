@@ -4,6 +4,3 @@ import android.app.Application
 import com.example.act8.repositori.ContainerApp
 import com.example.act8.repositori.ContainerDataApp
 
-class AplikasiSiswa : Application() {
-    lateinit var container: ContainerApp
-
