@@ -28,3 +28,6 @@ class HomeViewModel(private val repositoriSiswa: RepositoriSiswa) : ViewModel() 
             )
 }
 
+data class HomeUiState(
+    val listSiswa: List<Siswa> = listOf()
+)
