@@ -26,8 +26,10 @@ class HomeViewModel(private val repositoriSiswa: RepositoriSiswa) : ViewModel() 
                 started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
                 initialValue = HomeUiState()
             )
-}
 
-data class HomeUiState(
-    val listSiswa: List<Siswa> = listOf()
-)
+
+    data class HomeUiState(
+        val listSiswa: List<Siswa> = listOf()
+    )
+
+}
