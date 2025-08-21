@@ -2,12 +2,12 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    id("com.google.devtools.ksp") version "1.9.24-1.0.20"
+    id("com.google.devtools.ksp") version "2.2.0-2.0.2"
 }
 
 android {
     namespace = "com.example.act8"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.example.act8"
@@ -29,11 +29,14 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17 // ✅ Perbarui ke Java 17
+        targetCompatibility = JavaVersion.VERSION_17 // ✅ Perbarui ke Java 17
     }
-    kotlinOptions {
-        jvmTarget = "11"
+
+    kotlin { // ✅ Ganti kotlinOptions dengan kotlin
+        compilerOptions { // ✅ Gunakan DSL compilerOptions
+            jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17 // ✅ Gunakan JvmTarget enum
+        }
     }
     buildFeatures {
         compose = true
