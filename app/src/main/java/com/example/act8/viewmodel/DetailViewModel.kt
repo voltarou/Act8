@@ -4,7 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.act8.repositori.RepositoriSiswa
-import com.example.act8.ui.halaman.DestinasiDetailSiswa
+import com.example.act8.view.DestinasiDetailSiswa
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.filterNotNull
