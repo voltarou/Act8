@@ -21,4 +21,8 @@ interface SiswaDao {
 
     @Delete
     suspend fun delete(siswa: Siswa)
+
+    @Query("SELECT * FROM tblSiswa ORDER BY nama ASC")
+    fun getAllSiswa(): Flow<List<Siswa>>
+
 }
