@@ -6,23 +6,27 @@ import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.act8.R
+import com.example.act8.view.DetailSiswaScreen
+import com.example.act8.view.EditSiswaScreen
 import com.example.act8.view.EntrySiswaScreen
 import com.example.act8.view.HomeScreen
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.ui.res.stringResource
-import androidx.compose.runtime.getValue
-import androidx.navigation.compose.currentBackStackEntryAsState
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -30,11 +34,9 @@ fun SiswaApp(
     navController: NavHostController = rememberNavController(),
     modifier: Modifier = Modifier
 ) {
-    // Get the current back stack entry to determine the current screen
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = currentBackStackEntry?.destination?.route ?: DestinasiHome.route
+    val currentRoute = currentBackStackEntry?.destination?.route
 
-    // Determine if the "back" button should be shown
     val canNavigateBack = navController.previousBackStackEntry != null
 
     Scaffold(
@@ -44,7 +46,7 @@ fun SiswaApp(
                 canNavigateBack = canNavigateBack,
                 navigateUp = { navController.navigateUp() }
             )
-        }
+        }, modifier = Modifier
     ) { innerPadding ->
         HostNavigasi(
             navController = navController,
@@ -98,11 +100,39 @@ fun HostNavigasi(
         composable(DestinasiHome.route) {
             HomeScreen(
                 navigateToItemEntry = { navController.navigate(DestinasiEntry.route) },
+                navigateToItemUpdate = {
+                    navController.navigate("${DestinasiDetailSiswa.route}/$it")
+                }
+            )
+        }
+        composable(
+            route = DestinasiDetailSiswa.routeWithArgs,
+            arguments = listOf(navArgument(DestinasiDetailSiswa.itemIdArg) {
+                type = NavType.IntType
+            })
+        ) { backStackEntry ->
+            val idSiswa = backStackEntry.arguments?.getInt(DestinasiDetailSiswa.itemIdArg)
+            DetailSiswaScreen(
+                navigateToEditItem = {
+                    navController.navigate("${DestinasiEditSiswa.route}/$it")
+                },
+                navigateBack = { navController.navigateUp() }
             )
         }
         composable(DestinasiEntry.route) {
             EntrySiswaScreen(
                 navigateBack = { navController.popBackStack() }
+            )
+        }
+        composable(
+            route = DestinasiEditSiswa.routeWithArgs,
+            arguments = listOf(navArgument(DestinasiEditSiswa.itemIdArg) {
+                type = NavType.IntType
+            })
+        ) {
+            EditSiswaScreen(
+                navigateBack = { navController.popBackStack() },
+                onNavigateUp = { navController.navigateUp() }
             )
         }
     }
@@ -112,23 +142,34 @@ fun HostNavigasi(
  * Helper function to find the title resource based on the current navigation route.
  */
 @Composable
-private fun findTitleByRoute(route: String): Int {
+private fun findTitleByRoute(route: String?): Int {
     return when (route) {
         DestinasiHome.route -> DestinasiHome.titleRes
         DestinasiEntry.route -> DestinasiEntry.titleRes
+        DestinasiDetailSiswa.routeWithArgs -> DestinasiDetailSiswa.titleRes
+        DestinasiEditSiswa.routeWithArgs -> DestinasiEditSiswa.titleRes
         else -> R.string.app_name // Default title
     }
 }
 
-/**
- * Navigation destinations.
- */
+
 object DestinasiHome : DestinasiNavigasi {
-    override val route = "home"
+    override val route = "home_siswa"
     override val titleRes = R.string.app_name
 }
-
 object DestinasiEntry : DestinasiNavigasi {
-    override val route = "item_entry"
+    override val route = "entry_siswa"
     override val titleRes = R.string.entry_siswa
+}
+object DestinasiDetailSiswa : DestinasiNavigasi {
+    override val route = "detail_siswa"
+    override val titleRes = R.string.detail_siswa
+    const val itemIdArg = "idSiswa"
+    val routeWithArgs = "$route/{$itemIdArg}"
+}
+object DestinasiEditSiswa : DestinasiNavigasi {
+    override val route = "edit_siswa"
+    override val titleRes = R.string.edit_siswa
+    const val itemIdArg = "idSiswa"
+    val routeWithArgs = "$route/{$itemIdArg}"
 }

@@ -45,7 +45,7 @@ import com.example.act8.room.Siswa
 @Composable
 fun HomeScreen(
     navigateToItemEntry: () -> Unit,
-    navigateToItemUpdate: () -> Unit,
+    navigateToItemUpdate: (Int) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = viewModel(factory = PenyediaViewModel.Factory)
 ) {
@@ -76,7 +76,7 @@ fun HomeScreen(
         val uiStateSiswa by viewModel.homeUiState.collectAsState()
         BodyHome(
             itemSiswa = uiStateSiswa.listSiswa,
-            onSiswaClick = {navigateToItemUpdate()},
+            onSiswaClick = navigateToItemUpdate,
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
@@ -87,7 +87,7 @@ fun HomeScreen(
 @Composable
 fun BodyHome(
     itemSiswa: List<Siswa>,
-    onSiswaClick: (Siswa) -> Unit,
+    onSiswaClick: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -103,7 +103,7 @@ fun BodyHome(
         } else {
             ListSiswa(
                 itemSiswa = itemSiswa,
-                onSiswaClick = { onSiswaClick(it) },
+                onSiswaClick = onSiswaClick,
                 modifier = Modifier.padding(
                     horizontal =
                         dimensionResource(id = R.dimen.padding_small)
@@ -116,7 +116,7 @@ fun BodyHome(
 @Composable
 fun ListSiswa(
     itemSiswa: List<Siswa>,
-    onSiswaClick: (Siswa) -> Unit,
+    onSiswaClick: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(modifier = modifier) {
@@ -125,8 +125,9 @@ fun ListSiswa(
                 siswa = person,
                 modifier = Modifier
                     .padding(dimensionResource(id = R.dimen.padding_small))
-                    .clickable { onSiswaClick(person) }
-
+                    // Perbaikan utama:
+                    // Panggil onSiswaClick dengan ID siswa, bukan objek siswa
+                    .clickable { onSiswaClick(person.id) }
             )
         }
     }
